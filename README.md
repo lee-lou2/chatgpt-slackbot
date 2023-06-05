@@ -170,4 +170,4 @@ $ python main.py
 
 ## 9. 슬랙봇 사용
 
-![img](./img/25.png)
+![img](./img/28.png)
