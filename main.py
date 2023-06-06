@@ -33,9 +33,9 @@ def handle_message_events(event, client, message, say):
         say(resp)
     except AssertionError as ex:
         if str(ex) == "101001":
-            say("토큰이 만료되었습니다.\n('authorization_token' 또는 'refresh_token')토큰을 다시 발급받아주세요.")
+            say("토큰이 만료되었습니다.\n`refresh_token` 토큰을 다시 발급은 후\n`refresh_token=<TOKEN>`을 입력해주세요.")
         elif str(ex) == "101002":
-            say("채팅 방이 존재하지 않습니다.\n'room_id'를 다시 저장해주세요.")
+            say("채팅 방이 존재하지 않습니다.\n'room_id'를 제거 후 초기화하였습니다. 다시 시도해주세요.")
         else:
             say(f"답변 작성간 오류가 발생하였습니다😂\n오류 내용 : {ex}")
     except Exception as ex:

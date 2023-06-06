@@ -35,3 +35,12 @@ def fetch_config(key):
     result = c.fetchone()
     conn.close()
     return result[0] if result else None
+
+
+def delete_config(key):
+    """데이터 삭제"""
+    conn = sqlite3.connect('db.sqlite')
+    c = conn.cursor()
+    c.execute('DELETE FROM config WHERE key = ?', (key,))
+    conn.commit()
+    conn.close()

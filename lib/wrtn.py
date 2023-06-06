@@ -36,6 +36,31 @@ def _get_access_token():
     assert access_token, 101001
     return access_token
 
+def _create_room(access_token: str) -> str:
+    """
+    채팅방 생성
+    response = {
+        "result": "SUCCESS",
+        "data": {
+            "userId": "<USER_ID>",
+            "isDeleted": false,
+            "version": "1.2.0",
+            "_id": "<ROOM_ID>",
+            "createdAt": "<CREATED_AT>",
+            "updatedAt": "<UPDATED_AT>",
+            "__v": 0
+        }
+    }
+    """
+    url = "https://api.wow.wrtn.ai/chat"
+    headers = {
+        "Authorization": f"Bearer {access_token}",
+    }
+    resp = requests.post(url, headers=headers)
+    if resp.status_code != 201:
+        return None
+    return resp.json().get("data", {}).get("_id")
+
 
 def _has_room(access_token: str, room_id: str) -> bool:
     """
@@ -60,6 +85,8 @@ def _has_room(access_token: str, room_id: str) -> bool:
     headers = {
         "Authorization": f"Bearer {access_token}",
     }
+    if room_id is None:
+        room_id = _create_room(access_token)
     resp = requests.get(url, headers=headers)
     if resp.status_code != 200:
         return False
@@ -67,6 +94,7 @@ def _has_room(access_token: str, room_id: str) -> bool:
     for room in data.get("data", []):
         if room.get("_id") == room_id:
             return True
+    db.delete_config("room_id")
     return False
 
 
