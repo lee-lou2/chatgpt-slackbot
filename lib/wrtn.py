@@ -49,7 +49,9 @@ def _create_room(access_token: str) -> str:
     headers = {"Authorization": f"Bearer {access_token}"}
     resp = requests.post(url, headers=headers)
     assert resp.status_code == 201, 101004
-    return resp.json().get("data", {}).get("_id")
+    room_id = resp.json().get("data", {}).get("_id")
+    db.store_config("room_id", room_id)
+    return room_id
 
 
 def _has_room(access_token: str, room_id: str) -> bool:
