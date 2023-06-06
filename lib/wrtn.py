@@ -20,8 +20,7 @@ def _refresh_tokens(refresh_token: str):
         "Refresh": refresh_token,
     }
     resp = requests.post(url, headers=headers)
-    if resp.status_code != 201:
-        return None
+    assert resp.status_code == 201, 101001
     data = resp.json()
     return data.get("data").get("accessToken")
   
@@ -57,8 +56,7 @@ def _create_room(access_token: str) -> str:
         "Authorization": f"Bearer {access_token}",
     }
     resp = requests.post(url, headers=headers)
-    if resp.status_code != 201:
-        return None
+    assert resp.status_code == 201, 101004
     return resp.json().get("data", {}).get("_id")
 
 
@@ -85,11 +83,8 @@ def _has_room(access_token: str, room_id: str) -> bool:
     headers = {
         "Authorization": f"Bearer {access_token}",
     }
-    if room_id is None:
-        room_id = _create_room(access_token)
     resp = requests.get(url, headers=headers)
-    if resp.status_code != 200:
-        return False
+    assert resp.status_code == 200, 101005
     data = resp.json()
     for room in data.get("data", []):
         if room.get("_id") == room_id:
@@ -115,6 +110,7 @@ def _generate(access_token: str, message: str, room_id: str, model: str = "GPT3.
     }
     payload = {"message": message, "reroll": False}
     resp = requests.post(url, headers=headers, json=payload)
+    assert resp.status_code == 201, 101003
     for line in resp.iter_lines():
         if not line:
             continue
@@ -132,5 +128,6 @@ def conversation(message: str, model: str = "GPT3.5"):
     models = ["GPT3.5", "GPT4"]
     assert model in models, f"model은 {models} 중 하나여야 합니다."
     room_id = db.fetch_config("room_id")
+    room_id = room_id if room_id is not None else _create_room(access_token)
     assert _has_room(access_token, room_id), 101002
     return _generate(access_token, message, room_id, model)
