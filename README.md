@@ -1,9 +1,5 @@
 # 💬 무료 ChatGPT로 슬랙봇 생성
 
-:::tip
-뤼튼 API를 이용해 무료로 슬랙봇을 만들어보세요!
-:::
-
 ## 1. 슬랙 APP 생성
 
 ### 1.1 슬랙 APP 선택
@@ -73,16 +69,11 @@
 
 ![img](./img/14.png)
 
-## 3. 코드 가져오기
+## 3. 슬랙봇 로컬 실행 코드(테스트)
 
 ```bash
 $ git clone https://github.com/lee-lou2/chatgpt-slackbot
-```
 
-
-## 4. 슬랙봇 실행 코드
-
-```bash
 $ pip install -r requirements.txt
 
 $ export SLACK_APP_TOKEN="<위에서 저장한 코드>"
@@ -91,13 +82,13 @@ $ export SLACK_BOT_TOKEN="<위에서 저장한 코드>"
 $ python main.py
 ```
 
-## 5. 뤼튼 가입 및 토큰 조회
+## 4. 뤼튼 가입 및 토큰 조회
 
-### 5.1 뤼튼 가입
+### 4.1 뤼튼 가입
 
-👉 [뤼튼 가입](https://wrtn.ai/)
+👉 [뤼튼 가입 하러가기](https://wrtn.ai/)
 
-### 5.2 뤼튼 토큰 조회
+### 4.2 뤼튼 토큰 조회
 
 👉 개발자 도구 켜기
 
@@ -109,24 +100,11 @@ $ python main.py
 
 ![img](./img/26.png)
 
-### 5.3 뤼튼 채팅방 ID 조회
+## 5. 뤼튼 토큰 설정
 
-👉 채팅 생성
+👉 **아래 모든 절차가 끝난 후(배포 완료시)** 생성된 슬랙 채널에서 `refresh_token=<복사된_토큰>` 입력하여 데이터베이스 저장
 
-👉 개발자 도구 켜기
-
-👉 네트워크 탭으로 이동
-
-👉 생성된 API 의 채팅방 ID 복사
-
-![img](./img/27.png)
-
-
-## 6. 뤼튼 토큰 설정
-
-👉 **아래 모든 절차가 끝난 후(배포 완료시)** 생성된 슬랙 채널에서 `refresh_token=<복사된_토큰>`, `room_id=<채팅방 ID>` 입력하면 데이터베이스 자동으로 저장
-
-## 7. 깃헙 Fork
+## 6. 깃헙 Fork
 
 👉 (계정이 없는 경우) 깃헙 가입
 
@@ -134,7 +112,7 @@ $ python main.py
 
 ![img](./img/16.png)
 
-## 8. 클라우드타입을 이용한 배포
+## 7. 클라우드타입을 이용한 배포
 
 👉 (계정이 없는 경우) 클라우드타입 가입
 
@@ -157,7 +135,9 @@ $ python main.py
 
 ![img](./img/21.png)
 
-👉 **Pre start Command** 에 `pip install -r requirements.txt` 입력
+👉 **Pre start Command** 에 아래 코드 입력
+
+```pip install -r requirements.txt```
 
 👉 배포하기
 
@@ -168,6 +148,6 @@ $ python main.py
 ![img](./img/23.png)
 ![img](./img/24.png)
 
-## 9. 슬랙봇 사용
+## 8. 슬랙봇 사용
 
 ![img](./img/28.png)
