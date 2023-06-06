@@ -22,18 +22,12 @@ def _refresh_tokens(refresh_token: str):
     resp = requests.post(url, headers=headers)
     assert resp.status_code == 201, 101001
     data = resp.json()
-    return data.get("data").get("accessToken")
-  
-
-def _get_access_token():
-    """토큰 조회"""
-    refresh_token = db.fetch_config("refresh_token")
-    # 1. 리프레스 토큰이 없는 경우
-    assert refresh_token, 101001
-    access_token = _refresh_tokens(refresh_token)
-    # 2. 리프레스 토큰이 만료된 경우
-    assert access_token, 101001
+    access_token = data.get("data", {}).get("accessToken")
+    refresh_token = data.get("data", {}).get("refreshToken")
+    if refresh_token:
+        db.store_config("refresh_token", refresh_token)
     return access_token
+
 
 def _create_room(access_token: str) -> str:
     """
@@ -52,9 +46,7 @@ def _create_room(access_token: str) -> str:
     }
     """
     url = "https://api.wow.wrtn.ai/chat"
-    headers = {
-        "Authorization": f"Bearer {access_token}",
-    }
+    headers = {"Authorization": f"Bearer {access_token}"}
     resp = requests.post(url, headers=headers)
     assert resp.status_code == 201, 101004
     return resp.json().get("data", {}).get("_id")
@@ -80,9 +72,7 @@ def _has_room(access_token: str, room_id: str) -> bool:
     }
     """
     url = "https://api.wow.wrtn.ai/chat"
-    headers = {
-        "Authorization": f"Bearer {access_token}",
-    }
+    headers = {"Authorization": f"Bearer {access_token}"}
     resp = requests.get(url, headers=headers)
     assert resp.status_code == 200, 101005
     data = resp.json()
@@ -104,10 +94,7 @@ def _generate(access_token: str, message: str, room_id: str, model: str = "GPT3.
     data: {"end":"[DONE]"}
     """
     url = f"https://william.wow.wrtn.ai/generate/stream2/{room_id}?type=big&model={model}&platform=web"
-    headers = {
-        "Content-Type": "application/json",
-        "Authorization": f"Bearer {access_token}",
-    }
+    headers = {"Authorization": f"Bearer {access_token}"}
     payload = {"message": message, "reroll": False}
     resp = requests.post(url, headers=headers, json=payload)
     assert resp.status_code == 201, 101003
@@ -122,12 +109,26 @@ def _generate(access_token: str, message: str, room_id: str, model: str = "GPT3.
         yield str(match.group(1))
 
 
-def conversation(message: str, model: str = "GPT3.5"):
+def conversation(message: str):
     """대화 생성"""
-    access_token = _get_access_token()
+    # 1. 토큰 발급
+    refresh_token = db.fetch_config("refresh_token")
+    assert refresh_token, 101001
+    access_token = _refresh_tokens(refresh_token)
+    assert access_token, 101001
+
+    # 2. 모델 확인
+    model = db.fetch_config("model")
+    if model is None:
+        model = "GPT4"
+        db.store_config("model", model)
     models = ["GPT3.5", "GPT4"]
     assert model in models, f"model은 {models} 중 하나여야 합니다."
+
+    # 3. 대화방 확인
     room_id = db.fetch_config("room_id")
     room_id = room_id if room_id is not None else _create_room(access_token)
     assert _has_room(access_token, room_id), 101002
+
+    # 4. 대화 생성
     return _generate(access_token, message, room_id, model)

@@ -18,6 +18,9 @@ app = App(token=bot_token)
 def handle_message_events(event, client, message, say):
     try:
         text = message.get("text")
+        if text == "도움말":
+            say("👉 `refresh_token=<REFRESH_TOKEN>` : 토큰 지정\n👉 `model=<GPT3.5 or GPT4>` : 모델 지정\n👉 그 외 : `GPT` 답변")
+            return
         # 설정값 저장
         if re.match(r"(\w+)=(\w+)", text):
             key, value = text.split("=", 1)
@@ -25,7 +28,7 @@ def handle_message_events(event, client, message, say):
             say(f"👉 key : {key}\n👉 value : {value}\n설정 값이 저장되었습니다👍")
             return
         say("작성중입니다🙏")
-        resp = "".join([i for i in wrtn.conversation(text, "GPT3.5")])
+        resp = "".join([i for i in wrtn.conversation(text)])
         resp = resp.replace("\\n", "\n")
         resp = resp.replace("\\t", "\t")
         resp = resp.replace('\\"', '"')
@@ -40,6 +43,8 @@ def handle_message_events(event, client, message, say):
             say("답변 작성간 오류가 발생하였습니다.")
         elif str(ex) == "101004":
             say("대화방 생성간 오류가 발생하였습니다.")
+        elif str(ex) == "101005":
+            say("대화방 조회간 오류가 발생하였습니다.")
         else:
             say(f"답변 작성간 오류가 발생하였습니다😂\n오류 내용 : {ex}")
     except Exception as ex:
