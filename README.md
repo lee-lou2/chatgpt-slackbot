@@ -151,4 +151,4 @@ $ python main.py
 
 ## 8. 슬랙봇 사용
 
-![img](./img/28.png)
+![img](./img/29.png)
