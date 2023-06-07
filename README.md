@@ -151,4 +151,10 @@ $ python main.py
 
 ## 8. 슬랙봇 사용
 
+👉 `도움말` 입력시 간단한 설명 출력
+
+👉 최초 실행시 `refresh_token=<REFRESH_TOKEN>` 입력 필요
+
+👉 model 변경을 희망하는 경우 `model=<GPT3.5 or GPT4>` 입력 (기본값 : `GPT4`)
+
 ![img](./img/29.png)
