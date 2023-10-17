@@ -95,7 +95,7 @@ def _generate(access_token: str, message: str, room_id: str, model: str = "GPT3.
     data: {"message":{"reroll":false,"dynamicChipList":["무엇을 도와드릴까요?","지금 시간이 얼마인가요?","당신이 어디서 왔나요?"],"_id":"647d2bf87178110265bbbf1c","chatId":"647d2a904c657fd37c6dda86","userId":"646b16ec7d42cb0fa56cca99","model":"GPT3.5","isDeleted":false,"role":"assistant","type":"DynamicChipOutput","content":"Hello! How can I assist you today?","liked":false,"disliked":false,"meta":{"platform":"web","williamRequestId":"83401ae0-3515-4f98-8711-f35cefe5a5a3","hamletRequestId":"830c7b54-6891-4800-bb96-43aa198a61d8"},"version":"1.2.4","createdAt":"2023-06-05T00:27:36.345Z","updatedAt":"2023-06-05T00:27:36.345Z","__v":0}}
     data: {"end":"[DONE]"}
     """
-    url = f"https://william.wow.wrtn.ai/generate/stream2/{room_id}?type=big&model={model}&platform=web"
+    url = f"https://william.wow.wrtn.ai/chat/{room_id}/stream?model={model}&platform=web&type=big"
     headers = {"Authorization": f"Bearer {access_token}"}
     payload = {"message": message, "reroll": False}
     resp = requests.post(url, headers=headers, json=payload)
